@@ -267,17 +267,17 @@ void main_page_html(WiFiClient *client)
     client->print("<h2>Data</h2><br>");
     client->print("<table border=\"2\"><tr><td>Temp(F)</td><td>RH(%)</td><td>PH</td><td>N(mg/Kg)</td>");
     client->print("<td>P(mg/Kg)</td><td>K(mg/Kg)</td></tr><tr><td>");
-    client->print(tem_value);
+    client->print((int)tem_value);
     client->print("</td><td>");
-    client->print(humidity_value);
+    client->print((int)humidity_value);
     client->print("</td><td>");
-    client->print(ph_value);
+    client->print((int)ph_value);
     client->print("</td><td>");
-    client->print(N_value);
+    client->print((int)N_value);
     client->print("</td><td>");
-    client->print(P_value);
+    client->print((int)P_value);
     client->print("</td><td>");
-    client->print(K_value);
+    client->print((int)K_value);
     client->print("</td></tr></table>");
 
     client->print("<br>The time from starting to sending is about 24 seconds.");

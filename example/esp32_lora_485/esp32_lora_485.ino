@@ -40,6 +40,8 @@ void setup()
 
     // Button Check
     wifi_init();
+
+    delay(5000);
 }
 
 void loop()
@@ -55,7 +57,7 @@ void loop()
         value_log();
         temp = lora_msg_create(temp);
         lora_send_task(temp);
-        delay(3000);
+        delay(1000);
     }
 
     int sleep_s = atoi(sleep_time);
