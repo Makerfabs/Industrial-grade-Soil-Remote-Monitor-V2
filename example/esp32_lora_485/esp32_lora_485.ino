@@ -47,7 +47,7 @@ void setup()
 void loop()
 {
     // Send three time and sleep
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
     {
         // Serial.println(lora_msg_create());
 
@@ -55,8 +55,12 @@ void loop()
 
         temp = sensor_read();
         value_log();
-        temp = lora_msg_create(temp);
-        lora_send_task(temp);
+        if (i > 2)
+        {
+            temp = lora_msg_create(temp);
+            lora_send_task(temp);
+        }
+
         delay(1000);
     }
 
@@ -201,7 +205,7 @@ void sensor_read_5pin()
 
     humidity = CaculateValue((int)resp[3], (int)resp[4]);
     humidity_value = humidity * 0.1;
-    
+
     tem = CaculateValue((int)resp[5], (int)resp[6]);
     tem_value = tem * 0.1;
     tem_value = c2f(tem_value);
