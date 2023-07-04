@@ -98,7 +98,10 @@ void receive_page()
     while (1)
     {
         // page init
-        page_title("RECEIVE PAGE");
+        if (net_flag == 1)
+            page_title("RECEIVE PAGE(WiFi)");
+        else
+            page_title("RECEIVE PAGE");
 
         tft.drawRect(9, 44, 462, 252, TFT_WHITE);
 
@@ -116,7 +119,9 @@ void receive_page()
             if (!rec_str.equals(""))
             {
                 lora_record(rec_str);
-                thingspeak(rec_str);
+
+                if (net_flag == 1)
+                    thingspeak(rec_str);
 
                 rec_list[rec_index] = rec_str;
                 int temp_index = rec_index;
