@@ -1,11 +1,20 @@
-// #include <Wire.h>
+/*
+ESP32 Borad Version 1.0.6
+RadioLib Version 4.6.0
+
+
+*/
 #include <SPI.h>
 #include <LovyanGFX.hpp>
 #include <RadioLib.h>
+#include <WiFi.h>
 
 #include "makerfabs_pin.h"
 #include "log_save.h"
 #include "Lora.h"
+
+#define SSID "Makerfabs"
+#define PASSWORD "20160704"
 
 #define LOG_FILE_NAME "/my_log.txt"
 
@@ -28,6 +37,8 @@ SPIClass SPI_Lora = SPIClass(HSPI);
 SX1276 radio = new Module(LORA_CS, LORA_DIO0, LORA_RST, LORA_DIO1, SPI_Lora, SPISettings());
 Lora lora(&radio);
 
+int net_flag = 1;
+
 void setup()
 {
     Serial.begin(115200);
@@ -46,6 +57,24 @@ void setup()
     lora.init();
 
     checkFile(SD, LOG_FILE_NAME);
+
+    page_title("WiFi Connecting...");
+
+    WiFi.begin(SSID, PASSWORD);
+
+    int connect_count = 0;
+    while (WiFi.status() != WL_CONNECTED)
+    {
+        vTaskDelay(500);
+        Serial.print(".");
+        connect_count++;
+        if (connect_count > 20)
+        {
+            Serial.println("Wifi error");
+            net_flag = 0;
+            break;
+        }
+    }
 }
 
 void loop()
@@ -81,9 +110,13 @@ void receive_page()
         {
             String rec_str = "";
             rec_str = lora.receive();
+
+            // delay(5000);
+            // rec_str = "ID:P2,SLEEEP:10,H:1.01,T:2.86,PH:3.03,N:4,P:5,K:6";
             if (!rec_str.equals(""))
             {
                 lora_record(rec_str);
+                thingspeak(rec_str);
 
                 rec_list[rec_index] = rec_str;
                 int temp_index = rec_index;
@@ -148,5 +181,98 @@ void lora_record(String msg)
     appendFile(SD, LOG_FILE_NAME, "\n");
     appendFile(SD, LOG_FILE_NAME, msg.c_str());
     appendFile(SD, LOG_FILE_NAME, "\n");
-    readFile(SD, LOG_FILE_NAME);
+    // readFile(SD, LOG_FILE_NAME);
+}
+
+void thingspeak(String msg)
+{
+
+    // Parse
+    // ID:P2,SLEEEP:10,H:0.00,T:81.86,PH:4.00,N:0,P:0,K:0
+    int length = msg.length();
+    int value_start = 0;
+    String temp = "";
+    String data[8] = {"", "", "", "", "", "", "", ""};
+    int data_index = 0;
+    for (int i = 0; i < length; i++)
+    {
+        char c = msg.c_str()[i];
+        if (c == ':')
+        {
+            value_start = 1;
+            continue;
+        }
+        if (value_start == 1)
+        {
+            temp = temp + c;
+        }
+        if (c == ',' || i == (length - 1))
+        {
+            value_start = 0;
+            Serial.println(temp);
+
+            if (data_index < 8)
+            {
+                data[data_index++] = temp;
+            }
+            else
+            {
+                Serial.println("Lora data that does not conform to the format");
+                return;
+            }
+
+            temp = "";
+            continue;
+        }
+    }
+
+    // for (int i = 0; i < 8; i++)
+    // {
+    //     Serial.println(data[i]);
+    // }
+
+    // return;
+
+    // Send to Thingspeak
+    // https://api.thingspeak.com/update?api_key=9D8ACLLXDEGP6GZG&field1=0
+
+    WiFiClient client;
+    if (!client.connect("api.thingspeak.com", 80))
+    {
+        Serial.println("connection failed");
+        return;
+    }
+
+    String req = "/update?api_key=9D8ACLLXDEGP6GZG&";
+
+    for (int i = 0; i < 5; i++)
+    {
+        req = req + "field" + (i + 1) + "=" + data[i + 2] + "&";
+    }
+    req = req + "field6=" + data[7];
+
+    client.print(String("GET ") + req + " HTTP/1.1\r\n" +
+                 "Host: " + "api.thingspeak.com" + "\r\n" +
+                 "Connection: close\r\n\r\n");
+
+    unsigned long timeout = millis();
+    while (client.available() == 0)
+    {
+        if (millis() - timeout > 5000)
+        {
+            Serial.println(">>> Client Timeout !");
+            client.stop();
+            return;
+        }
+    }
+
+    // Read all the lines of the reply from server and print them to Serial
+    while (client.available())
+    {
+        String line = client.readStringUntil('\r');
+        Serial.print(line);
+    }
+
+    Serial.println();
+    Serial.println("closing connection");
 }
