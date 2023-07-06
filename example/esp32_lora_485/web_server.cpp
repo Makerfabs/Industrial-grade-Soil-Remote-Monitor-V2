@@ -44,10 +44,12 @@ void wifi_init()
 
             WiFi.disconnect();
 
-            ap_init(AP_SSID, AP_PWD);
+            String AP_name = "";
+            AP_name = AP_name + AP_SSID + get_uid();
+            ap_init(AP_name, AP_PWD);
 
             Serial.printf("Please connect :");
-            Serial.println(AP_SSID);
+            Serial.println(AP_name);
             Serial.printf("Password is :");
             Serial.println(AP_PWD);
             Serial.println("And visit 192.168.4.1 to set sensor.");
@@ -284,4 +286,20 @@ void main_page_html(WiFiClient *client)
     client->print("\"Interval time\" refers to the time between the last transmission and the next startup.<br>");
     // client->print();
     client->println();
+}
+
+String get_uid()
+{
+    // uint64_t chipid;
+    uint32_t chipid = 0;
+    char c[20];
+
+    // chipid = ESP.getEfuseMac();
+    for (int i = 0; i < 17; i = i + 8)
+    {
+        chipid |= ((ESP.getEfuseMac() >> (40 - i)) & 0xff) << i;
+    }
+    sprintf(c, "%08X", (uint32_t)chipid);
+
+    return (String)c;
 }

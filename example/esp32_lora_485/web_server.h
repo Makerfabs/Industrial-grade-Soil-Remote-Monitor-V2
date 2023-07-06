@@ -15,6 +15,7 @@ void config_check();
 
 int parse_request(String request, char *id, char *sleep);
 String sensor_read();
+String get_uid();
 
 void main_page_html(WiFiClient *client);
 

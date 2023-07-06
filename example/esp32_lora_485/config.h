@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define AP_SSID "esp32_test1"
+#define AP_SSID "Makerfabs-"
 #define AP_PWD "12345678"
 
 #define SENSOR_5_PIN
