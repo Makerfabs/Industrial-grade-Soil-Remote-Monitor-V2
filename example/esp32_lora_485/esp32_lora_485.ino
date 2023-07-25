@@ -18,9 +18,9 @@ unsigned char resp[80] = {0};
 float humidity_value = 0.0;
 float tem_value = 0.0;
 float ph_value = 0.0;
-int P_value = 0;
-int N_value = 0;
-int K_value = 0;
+//int P_value = 0;
+//int N_value = 0;
+//int K_value = 0;
 
 RTC_DATA_ATTR int bootCount = 0;
 
@@ -168,7 +168,8 @@ String sensor_read()
     // K_value = 8;
 
     String str = "H:";
-    str = str + humidity_value + ",T:" + tem_value + ",PH:" + ph_value + ",N:" + N_value + ",P:" + P_value + ",K:" + K_value;
+    str = str + humidity_value + ",T:" + tem_value + ",PH:" + ph_value;
+//    + ",N:" + N_value + ",P:" + P_value + ",K:" + K_value;
 
     return str;
 }
@@ -212,9 +213,9 @@ void sensor_read_5pin()
 
     ph = CaculateValue((int)resp[9], (int)resp[10]);
     ph_value = ph * 0.1;
-    N_value = CaculateValue((int)resp[11], (int)resp[12]);
-    P_value = CaculateValue((int)resp[13], (int)resp[14]);
-    K_value = CaculateValue((int)resp[15], (int)resp[16]);
+//    N_value = CaculateValue((int)resp[11], (int)resp[12]);
+//    P_value = CaculateValue((int)resp[13], (int)resp[14]);
+//    K_value = CaculateValue((int)resp[15], (int)resp[16]);
 }
 
 void sensor_read_3pin()
@@ -262,15 +263,15 @@ void value_log()
     Serial.print("ph_value:");
     Serial.println(ph_value);
 
-    Serial.print("N= ");
-    Serial.print(N_value);
-    Serial.println(" mg/kg");
-    Serial.print("P= ");
-    Serial.print(P_value);
-    Serial.println(" mg/kg");
-    Serial.print("K= ");
-    Serial.print(K_value);
-    Serial.println(" mg/kg");
+//    Serial.print("N= ");
+//    Serial.print(N_value);
+//    Serial.println(" mg/kg");
+//    Serial.print("P= ");
+//    Serial.print(P_value);
+//    Serial.println(" mg/kg");
+//    Serial.print("K= ");
+//    Serial.print(K_value);
+//    Serial.println(" mg/kg");
 
 #endif
 }
@@ -316,4 +317,3 @@ float c2f(float c_temp)
 {
     return c_temp * 9.0 / 5.0 + 32;
 }
-
