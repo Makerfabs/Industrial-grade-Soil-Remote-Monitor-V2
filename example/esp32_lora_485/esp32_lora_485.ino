@@ -112,7 +112,7 @@ void lora_init()
 String lora_msg_create(String sensor_data)
 {
     String temp = "ID:";
-    temp = temp + sensor_id + ",SLEEEP:" + sleep_time + "," + sensor_data;
+    temp = temp + sensor_id + ",SLEEP:" + sleep_time + "," + sensor_data;
 
     return temp;
 }
