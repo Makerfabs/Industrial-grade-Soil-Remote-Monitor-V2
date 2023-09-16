@@ -6,9 +6,9 @@ extern char sleep_time[NVS_DATA_LENGTH];
 extern float humidity_value;
 extern float tem_value;
 extern float ph_value;
-extern int P_value;
-extern int N_value;
-extern int K_value;
+//extern int P_value;
+//extern int N_value;
+//extern int K_value;
 
 // Web page
 const char *mainPage =
@@ -267,25 +267,25 @@ void main_page_html(WiFiClient *client)
     client->print("<input type=\"submit\" value=\"Setup and Restart\"></form>");
 
     client->print("<h2>Data</h2><br>");
-    client->print("<table border=\"2\"><tr><td>Temp(F)</td><td>RH(%)</td><td>PH</td><td>N(mg/Kg)</td>");
-    client->print("<td>P(mg/Kg)</td><td>K(mg/Kg)</td></tr><tr><td>");
+    client->print("<table border=\"2\"><tr><td>Temp(F)</td><td>RH(%)</td><td>PH</td>");//<td>N(mg/Kg)</td>
+    client->print("</tr><td>");//<td>P(mg/Kg)</td><td>K(mg/Kg)</td><tr>
     client->print((int)tem_value);
     client->print("</td><td>");
     client->print((int)humidity_value);
     client->print("</td><td>");
     client->print((int)ph_value);
-    client->print("</td><td>");
-    client->print((int)N_value);
-    client->print("</td><td>");
-    client->print((int)P_value);
-    client->print("</td><td>");
-    client->print((int)K_value);
     client->print("</td></tr></table>");
+//    client->print((int)N_value);
+//    client->print("</td><td>");
+//    client->print((int)P_value);
+//    client->print("</td><td>");
+//    client->print((int)K_value);
+//    client->print("</td></tr></table>");
 
-    client->print("<br>The time from starting to sending is about 24 seconds.");
-    client->print("\"Interval time\" refers to the time between the last transmission and the next startup.<br>");
+//    client->print("<br>The time from starting to sending is about 24 seconds.");
+//    client->print("\"Interval time\" refers to the time between the last transmission and the next startup.<br>");
     // client->print();
-    client->println();
+//    client->println();
 }
 
 String get_uid()
