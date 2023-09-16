@@ -18,9 +18,9 @@ unsigned char resp[80] = {0};
 float humidity_value = 0.0;
 float tem_value = 0.0;
 float ph_value = 0.0;
-//int P_value = 0;
-//int N_value = 0;
-//int K_value = 0;
+// int P_value = 0;
+// int N_value = 0;
+// int K_value = 0;
 
 RTC_DATA_ATTR int bootCount = 0;
 
@@ -51,14 +51,16 @@ void loop()
     {
         // Serial.println(lora_msg_create());
 
-        String temp = "";
+        // String temp = "";
 
-        temp = sensor_read();
+        // temp = sensor_read();
+        sensor_read();
         value_log();
         if (i > 2)
         {
-            temp = lora_msg_create(temp);
-            lora_send_task(temp);
+            // temp = lora_msg_create(temp);
+            // lora_send_task(temp);
+            lora_send_task(json_create());
         }
 
         delay(1000);
@@ -117,6 +119,22 @@ String lora_msg_create(String sensor_data)
     return temp;
 }
 
+String json_create()
+{
+    String temp = "{";
+    temp = temp + "\"ID\":\"" + sensor_id + "\",\"SLEEP\":" + sleep_time + ",";
+    // temp = temp + "\"bat\":" + bat_vol + ",";
+    temp = temp + "\"temp\":" + tem_value + ",";
+    temp = temp + "\"humi\":" + humidity_value + ",";
+    // temp = temp + "\"tvoc\":" + tvoc + ",";
+    // temp = temp + "\"eco2\":" + eCO2 + ",";
+    // temp = temp + "\"h2\":" + H2 + ",";
+    // temp = temp + "\"Ethanol\":" + Ethanol + ",";
+    temp = temp + "\"PH\":" + ph_value + "}";
+
+    return temp;
+}
+
 void lora_send_task(String data)
 {
     Serial.println(data);
@@ -169,7 +187,7 @@ String sensor_read()
 
     String str = "H:";
     str = str + humidity_value + ",T:" + tem_value + ",PH:" + ph_value;
-//    + ",N:" + N_value + ",P:" + P_value + ",K:" + K_value;
+    //    + ",N:" + N_value + ",P:" + P_value + ",K:" + K_value;
 
     return str;
 }
@@ -209,13 +227,13 @@ void sensor_read_5pin()
 
     tem = CaculateValue((int)resp[5], (int)resp[6]);
     tem_value = tem * 0.1;
-    tem_value = c2f(tem_value);
+    // tem_value = c2f(tem_value);
 
     ph = CaculateValue((int)resp[9], (int)resp[10]);
     ph_value = ph * 0.1;
-//    N_value = CaculateValue((int)resp[11], (int)resp[12]);
-//    P_value = CaculateValue((int)resp[13], (int)resp[14]);
-//    K_value = CaculateValue((int)resp[15], (int)resp[16]);
+    //    N_value = CaculateValue((int)resp[11], (int)resp[12]);
+    //    P_value = CaculateValue((int)resp[13], (int)resp[14]);
+    //    K_value = CaculateValue((int)resp[15], (int)resp[16]);
 }
 
 void sensor_read_3pin()
@@ -249,7 +267,7 @@ void sensor_read_3pin()
 
     tem = CaculateValue((int)resp[5], (int)resp[6]);
     tem_value = tem * 0.1;
-    tem_value = c2f(tem_value);
+    // tem_value = c2f(tem_value);
 }
 
 void value_log()
@@ -263,15 +281,15 @@ void value_log()
     Serial.print("ph_value:");
     Serial.println(ph_value);
 
-//    Serial.print("N= ");
-//    Serial.print(N_value);
-//    Serial.println(" mg/kg");
-//    Serial.print("P= ");
-//    Serial.print(P_value);
-//    Serial.println(" mg/kg");
-//    Serial.print("K= ");
-//    Serial.print(K_value);
-//    Serial.println(" mg/kg");
+    //    Serial.print("N= ");
+    //    Serial.print(N_value);
+    //    Serial.println(" mg/kg");
+    //    Serial.print("P= ");
+    //    Serial.print(P_value);
+    //    Serial.println(" mg/kg");
+    //    Serial.print("K= ");
+    //    Serial.print(K_value);
+    //    Serial.println(" mg/kg");
 
 #endif
 }

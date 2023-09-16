@@ -7,8 +7,8 @@
 #define SENSOR_5_PIN
 // #define SENSOR_3_PIN
 
-#define DEFAULT_SENSOR_ID "0x1234"
-#define DEFAULT_SLEEP_TIME "10"
+#define DEFAULT_SENSOR_ID "SoilM01"
+#define DEFAULT_SLEEP_TIME "3600"
 
 #define SUCCESS 1
 #define ERROR 0
