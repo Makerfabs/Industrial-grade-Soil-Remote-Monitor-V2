@@ -20,6 +20,30 @@ int check_sleep_time(char *time)
     return read_nvs("sleep", time);
 }
 
+void record_count(int count)
+{
+    char temp[20];
+    sprintf(temp, "%d", count);
+    write_nvs("count", temp);
+}
+
+int check_count(int *count)
+{
+    char temp[20];
+    String temp_str = "";
+
+    if (read_nvs("count", temp) == SUCCESS)
+    {
+        temp_str += temp;
+        *count = temp_str.toInt();
+        return SUCCESS;
+    }
+    else
+    {
+        *count = 0;
+        return ERROR;
+    }
+}
 //----------------------------------
 // ESP32 写NVS   DEBUG LOG
 // 验证过，一般不会失败

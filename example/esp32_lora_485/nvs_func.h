@@ -18,4 +18,7 @@ int check_id(char *id);
 void record_sleep_time(const char *time);
 int check_sleep_time(char *time);
 
+void record_count(int count);
+int check_count(int *count);
+
 #endif

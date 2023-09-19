@@ -13,6 +13,8 @@ HardwareSerial MySerial(1);
 char sensor_id[NVS_DATA_LENGTH];
 char sleep_time[NVS_DATA_LENGTH];
 
+int count = 0;
+
 unsigned char resp[80] = {0};
 
 float humidity_value = 0.0;
@@ -47,7 +49,7 @@ void setup()
 void loop()
 {
     // Send three time and sleep
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 15; i++)
     {
         // Serial.println(lora_msg_create());
 
@@ -56,14 +58,16 @@ void loop()
         // temp = sensor_read();
         sensor_read();
         value_log();
-        if (i > 2)
+        if (i > 13)
         {
             // temp = lora_msg_create(temp);
             // lora_send_task(temp);
+            check_count(&count);
+            record_count(++count);
             lora_send_task(json_create());
         }
 
-        delay(1000);
+        delay(2000);
     }
 
     int sleep_s = atoi(sleep_time);
@@ -122,8 +126,8 @@ String lora_msg_create(String sensor_data)
 String json_create()
 {
     String temp = "{";
-    temp = temp + "\"ID\":\"" + sensor_id + "\",\"SLEEP\":" + sleep_time + ",";
-    // temp = temp + "\"bat\":" + bat_vol + ",";
+    temp = temp + "\"ID\":\"" + sensor_id + "\",\"COUNT\":" + count + ",\"SLEEP\":" + sleep_time + ",";
+    temp = temp + "\"bat\":" + 0 + ",";
     temp = temp + "\"temp\":" + tem_value + ",";
     temp = temp + "\"humi\":" + humidity_value + ",";
     // temp = temp + "\"tvoc\":" + tvoc + ",";
