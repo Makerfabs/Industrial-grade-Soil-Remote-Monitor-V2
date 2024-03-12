@@ -30,7 +30,7 @@
 #define SPI_MISO 13
 #define SPI_SCK 12
 
-#define FREQUENCY 868.0
+#define FREQUENCY 915 //868.0
 #define BANDWIDTH 125.0
 #define SPREADING_FACTOR 12
 #define CODING_RATE 6

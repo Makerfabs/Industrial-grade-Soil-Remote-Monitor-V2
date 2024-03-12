@@ -1,3 +1,6 @@
+// 使用 4.6.0  版本的库 RadioLib 在文件夹： C:\Users\maker\Documents\Arduino\libraries\RadioLib
+// 使用 2.0.0  版本的库 SPI 在文件夹： C:\Users\maker\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.14\libraries\SPI
+// 使用 2.0.0  版本的库 WiFi 在文件夹： C:\Users\maker\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.14\libraries\WiFi
 
 #include <RadioLib.h>
 #include <SPI.h>
