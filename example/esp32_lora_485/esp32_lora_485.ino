@@ -26,6 +26,7 @@ float ph_value = 0.0;
 // int P_value = 0;
 // int N_value = 0;
 // int K_value = 0;
+float bat_vol = 0.0;
 
 RTC_DATA_ATTR int bootCount = 0;
 
@@ -60,6 +61,7 @@ void loop()
 
         // temp = sensor_read();
         sensor_read();
+        read_bat();
         value_log();
         if (i > 13)
         {
@@ -93,6 +95,7 @@ void pin_init()
     pinMode(POWER_485, OUTPUT);
     pinMode(POWER_LORA, OUTPUT);
     pinMode(LORA_CS, OUTPUT);
+    pinMode(BAT_PIN, INPUT);
 
     digitalWrite(POWER_485, HIGH);
     digitalWrite(POWER_LORA, HIGH);
@@ -130,7 +133,7 @@ String json_create()
 {
     String temp = "{";
     temp = temp + "\"ID\":\"" + sensor_id + "\",\"COUNT\":" + count + ",\"SLEEP\":" + sleep_time + ",";
-    temp = temp + "\"bat\":" + 0 + ",";
+    temp = temp + "\"bat\":" + bat_vol + ",";
     temp = temp + "\"temp\":" + tem_value + ",";
     temp = temp + "\"humi\":" + humidity_value + ",";
     // temp = temp + "\"tvoc\":" + tvoc + ",";
@@ -299,6 +302,10 @@ void value_log()
     //    Serial.println(" mg/kg");
 
 #endif
+
+    Serial.print("Bat: ");
+    Serial.print(bat_vol);
+    Serial.println(" V");
 }
 
 int CaculateValue(int x, int y)
@@ -341,4 +348,9 @@ void print_wakeup_reason()
 float c2f(float c_temp)
 {
     return c_temp * 9.0 / 5.0 + 32;
+}
+
+void read_bat()
+{
+    bat_vol = 3.3 * analogRead(BAT_PIN) / 4096 * 2;
 }
